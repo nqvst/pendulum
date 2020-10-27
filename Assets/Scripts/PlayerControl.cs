@@ -15,10 +15,7 @@ public class PlayerControl : MonoBehaviour
     Rigidbody2D rb;
 
     [SerializeField] Transform graphicsPrefab;
-    [SerializeField] Color closestColor;
-
-    [SerializeField] float colorShiftSpeed = 1;
-    [SerializeField] float targetSwitchSpeed = 1;
+    
     [SerializeField] Gradient grad;
 
     [SerializeField] float spinningForce = 1000;
@@ -31,14 +28,10 @@ public class PlayerControl : MonoBehaviour
 
     private PlayerInput playerInput;
 
-    private bool isPressing = false;
     private bool isPaused = false;
 
-    [SerializeField] AudioClip clip;
     private AudioSource audioData;
-
     private Transform playerGraphics;
-
     private GameManager gameManager;
 
     private Dictionary<string, UnityAction> actions;
@@ -70,10 +63,10 @@ public class PlayerControl : MonoBehaviour
         actions = new Dictionary<string, UnityAction>() {
             { Events.START, OnStart },
             { Events.POINTS_CREATED, OnPointsCreated },
-            { Events.PRESS, Press},
+            { Events.PRESS, OnPress},
             { Events.UNPRESS, OnUnPress },
             { Events.PAUSE, OnPause },
-            {Events.UNPAUSE, OnUnPause },
+            { Events.UNPAUSE, OnUnPause },
         };
 
         foreach (KeyValuePair<string, UnityAction> act in actions)
@@ -91,19 +84,15 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void Press()
+    void OnPress()
     {
-        isPressing = true;
         if (gameManager.Finished)
         {
-            gameManager.MainMenu();
+            gameManager.Reset();
         }
     }
 
-    void OnUnPress()
-    {
-        isPressing = false;
-    }
+    void OnUnPress() {}
 
     void OnPointsCreated()
     {
@@ -147,7 +136,6 @@ public class PlayerControl : MonoBehaviour
     {
         rb.isKinematic = false;
         rb.simulated = true;
-       
     }
 
     GameObject FindClosestPoint()
@@ -247,18 +235,20 @@ public class PlayerControl : MonoBehaviour
         audioData.Play();
     }
 
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.transform.CompareTag("Goal"))
         {
-            LetGo();
-            ClosestPoint = null;
-            Debug.Log("player reached the goal");
-            PausePlayer();
+            if (!gameManager.EndlessMode)
+            {
+                LetGo();
+                ClosestPoint = null;
+                Debug.Log("player reached the goal");
+                PausePlayer();
+                EventManager.TriggerEvent(Events.STOP_TIMER);
+                StartCoroutine(GoToGoal(other.transform.position));
+            }
             EventManager.TriggerEvent(Events.GOAL);
-            EventManager.TriggerEvent(Events.STOP_TIMER);
-            StartCoroutine(GoToGoal(other.transform.position));
         }
     }
 

@@ -6,12 +6,19 @@ using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour {
 
-
-    List<IEnumerator> startSequence = new List<IEnumerator>();
-
 	[SerializeField] int targetFrameRate = 60;
+	[SerializeField] bool endless;
+
+	public bool EndlessMode {
+		get {
+			return endless;
+		}
+		private set { }
+	}
+
 	public Color currentBackgroundColor;
 	public Color currentContrastColor;
+
 	private AudioSource audioSource;
 
 	public bool Paused { get; private set; }
@@ -79,12 +86,19 @@ public class GameManager : MonoBehaviour {
 	void OnMute() { Camera.main.GetComponent<AudioListener>().enabled = false; }
 	void OnUnMute() { Camera.main.GetComponent<AudioListener>().enabled = true; }
 
-	void OnGoal() {
-		Finished = true;
-		if(audioSource != null)
-        {
+	void OnGoal()
+	{
+		if (audioSource != null)
+		{
 			audioSource.Play();
+		}
+
+		if (!endless)
+        {
+			Finished = true;
         }
+
+
 	}
 	void Press() { GenerateNewColors();}
 
@@ -96,7 +110,12 @@ public class GameManager : MonoBehaviour {
 		SceneManager.LoadScene("MainMenu");
     }
 
-	void GenerateNewColors()
+    public void Reset()
+    {
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	}
+
+    void GenerateNewColors()
 	{
 		var r = Random.Range(0.0f, 1.0f);
 		var g = Random.Range(0.0f, 1.0f);

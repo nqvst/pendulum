@@ -10,6 +10,7 @@ public class SpawnPoints : MonoBehaviour
     [SerializeField] int amountOfPoints;
     [SerializeField] float degree = 137.5f;
     [SerializeField] float distance = 0.5f;
+    [SerializeField] bool sendStartEvent = false;
    
 
     [SerializeField] float scale = 10;
@@ -29,10 +30,8 @@ public class SpawnPoints : MonoBehaviour
 
     void Start()
     {
-        //SpawnPointsInCircle(amountOfPoints);
         points = new List<Transform>();
-        spawner = SpawnAndMovePoints(amountOfPoints, distance, degree);
-        //SpawnPointsInFib(amountOfPoints);
+        spawner = SpawnAndMovePoints(amountOfPoints, distance, degree);   
         StartCoroutine(spawner);
     }
 
@@ -78,12 +77,16 @@ public class SpawnPoints : MonoBehaviour
             for (int i = 1; i < points.Count; i++)
             {
                 var newPos = CalculatThing(currentAngle, currentDist, i);
-                points[i].position = newPos;
+                points[i].position = newPos + (Vector2)transform.position;
             }
             yield return null;
         }
 
-        EventManager.TriggerEvent(Events.POINTS_CREATED);
-        EventManager.TriggerEvent(Events.START);
+        if(sendStartEvent)
+        {
+            EventManager.TriggerEvent(Events.POINTS_CREATED);
+            EventManager.TriggerEvent(Events.START);
+        }
+
     }
 }

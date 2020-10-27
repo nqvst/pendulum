@@ -10,7 +10,10 @@ public class PlayerGraphics : MonoBehaviour
 
     //private PlayerInput playerInput;
 
-    
+    [SerializeField] private Color lineColorActive = Color.white;
+    [SerializeField] private Color lineColorInactive = Color.clear;
+
+
     void Start()
     {
         //playerInput = FindObjectOfType<PlayerInput>();
@@ -33,7 +36,8 @@ public class PlayerGraphics : MonoBehaviour
 
         if (player.ClosestPoint != null)
         {
-            lineRenderer.endColor = Color.gray;
+            lineRenderer.startColor = lineColorInactive;
+            lineRenderer.endColor = lineColorInactive;
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, player.ClosestPoint.transform.position);
         }
@@ -41,7 +45,9 @@ public class PlayerGraphics : MonoBehaviour
         // player has grabbed a point and is holding down 
         if (player.CurrentPoint != null)
         {
-            lineRenderer.endColor = Color.black;
+            
+            lineRenderer.startColor = lineColorActive;
+            lineRenderer.endColor = lineColorActive;
             lineRenderer.SetPosition(1, player.CurrentPoint.transform.position);
         }
 
@@ -50,6 +56,8 @@ public class PlayerGraphics : MonoBehaviour
         {
             lineRenderer.SetPosition(1, transform.position);
             lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.startColor = Color.clear;
+            lineRenderer.endColor = Color.clear;
         }
     }
 }
