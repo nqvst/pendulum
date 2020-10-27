@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &29261830
 RectTransform:
   m_ObjectHideFlags: 0
@@ -436,7 +436,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 25
+  orthographic size: 40
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -787,7 +787,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f222580f975f4404492b3c0387d12a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  padding: 40
+  color: {r: 0.2509804, g: 0.7725491, b: 0.3647059, a: 1}
+  maxAlpha: 0.5
+  paddingMultiplyer: 100
   offsetAngle: 90
 --- !u!1 &1168590895
 GameObject:
@@ -875,6 +877,7 @@ GameObject:
   - component: {fileID: 1239020300}
   - component: {fileID: 1239020302}
   - component: {fileID: 1239020303}
+  - component: {fileID: 1239020304}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1020,6 +1023,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1239020304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239020299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24845138538ed4760b6c442679efb7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorShiftSpeed: 1
 --- !u!1 &1403639318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1208,6 +1224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionPrefab: {fileID: 0}
+  radius: 400
 --- !u!1 &1450566489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1226,7 +1243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1450566490
 RectTransform:
   m_ObjectHideFlags: 0

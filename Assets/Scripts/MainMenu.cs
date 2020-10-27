@@ -14,4 +14,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("TimeAttack");
     }
+
+    public void Endless()
+    {
+        SceneManager.LoadScene("Endless");
+    }
 }

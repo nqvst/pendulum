@@ -8,6 +8,8 @@ public class Waypoint : MonoBehaviour
 {
 
     Image image;
+    [SerializeField] Color color;
+    [SerializeField] float maxAlpha;
     Transform target;
     [SerializeField] float paddingMultiplyer;
     [SerializeField] float offsetAngle = 0;
@@ -39,10 +41,12 @@ public class Waypoint : MonoBehaviour
 
         if (isInView)
         {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 0);
+            color.a = 0;
+            image.color = color;
         } else
         {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 1);
+            color.a = maxAlpha;
+            image.color = color;
         }
 
         transform.position = Vector2.Lerp(transform.position, arrowPos, Time.deltaTime * 2);

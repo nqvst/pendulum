@@ -5,11 +5,7 @@ using UnityEngine;
 public class Goal : MonoBehaviour
 {
     [SerializeField] Transform explosionPrefab;
-
-    void Start()
-    {
-        
-    }
+    [SerializeField] int radius;
 
     void OnEnable()
     {
@@ -26,7 +22,12 @@ public class Goal : MonoBehaviour
         MoveToNewPosition();
     }
 
-    void MoveToNewPosition(float radius = 200)
+    private void Start()
+    {
+        MoveToNewPosition();
+    }
+
+    void MoveToNewPosition()
     {
         Vector2 randomPosition = Random.insideUnitCircle.normalized * Random.Range(0, radius);
         transform.position = randomPosition;
