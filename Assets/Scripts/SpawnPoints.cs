@@ -11,7 +11,8 @@ public class SpawnPoints : MonoBehaviour
     [SerializeField] float degree = 137.5f;
     [SerializeField] float distance = 0.5f;
     [SerializeField] bool sendStartEvent = false;
-   
+
+    [SerializeField] bool instant = false;
 
     [SerializeField] float scale = 10;
 
@@ -23,7 +24,7 @@ public class SpawnPoints : MonoBehaviour
         float radius = scale * Mathf.Sqrt(count);
         float x = radius * (float)System.Math.Cos(angle);
         float y = radius * (float)System.Math.Sin(angle);
-        return new Vector2(x,y);
+        return new Vector2(x, y);
     }
 
     IEnumerator spawner;
@@ -31,8 +32,15 @@ public class SpawnPoints : MonoBehaviour
     void Start()
     {
         points = new List<Transform>();
-        spawner = SpawnAndMovePoints(amountOfPoints, distance, degree);   
-        StartCoroutine(spawner);
+        if (instant)
+        {
+            SpawnPointsInFib(amountOfPoints);
+        }
+        else
+        {
+            spawner = SpawnAndMovePoints(amountOfPoints, distance, degree);
+            StartCoroutine(spawner);
+        }
     }
 
     void SpawnPointsInCircle(int amount, float minRadius = 0, float maxRadius = 200)
@@ -48,13 +56,18 @@ public class SpawnPoints : MonoBehaviour
 
     void SpawnPointsInFib(int amount)
     {
-
         for (int i = 0; i < amount; i++)
         {
             Vector2 pos = CalculatThing(degree, distance, i);
             Instantiate(pointPrefab, (Vector2)transform.position + pos, Quaternion.identity);
         }
         EventManager.TriggerEvent(Events.POINTS_CREATED);
+
+        if (sendStartEvent)
+        {
+            //EventManager.TriggerEvent(Events.START);
+            EventManager.TriggerEvent(Events.START_COUNTDOWN);
+        }
     }
 
     IEnumerator SpawnAndMovePoints(int amount, float targetDistance, float targetAngle)
@@ -82,7 +95,7 @@ public class SpawnPoints : MonoBehaviour
             yield return null;
         }
 
-        if(sendStartEvent)
+        if (sendStartEvent)
         {
             EventManager.TriggerEvent(Events.POINTS_CREATED);
             EventManager.TriggerEvent(Events.START);

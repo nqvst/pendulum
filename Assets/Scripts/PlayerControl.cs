@@ -15,7 +15,7 @@ public class PlayerControl : MonoBehaviour
     Rigidbody2D rb;
 
     [SerializeField] Transform graphicsPrefab;
-    
+
     [SerializeField] Gradient grad;
 
     [SerializeField] float spinningForce = 1000;
@@ -67,6 +67,7 @@ public class PlayerControl : MonoBehaviour
             { Events.UNPRESS, OnUnPress },
             { Events.PAUSE, OnPause },
             { Events.UNPAUSE, OnUnPause },
+            { Events.GOAL, OnGoal },
         };
 
         foreach (KeyValuePair<string, UnityAction> act in actions)
@@ -92,11 +93,12 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void OnUnPress() {}
+    void OnUnPress() { }
 
     void OnPointsCreated()
     {
         pointsCreated = true;
+        swingPoints = new List<GameObject>();
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("GrapplePoint"))
         {
             swingPoints.Add(go);
@@ -121,7 +123,8 @@ public class PlayerControl : MonoBehaviour
     void OnUnPause()
     {
         isPaused = false;
-        if (hasStarted) {
+        if (hasStarted)
+        {
             UnPausePlayer();
         }
     }
@@ -129,7 +132,7 @@ public class PlayerControl : MonoBehaviour
     void PausePlayer()
     {
         rb.isKinematic = true;
-        rb.simulated = false;  
+        rb.simulated = false;
     }
 
     void UnPausePlayer()
@@ -159,7 +162,7 @@ public class PlayerControl : MonoBehaviour
                 {
                     closest = go;
                 }
-            
+
             }
         }
         return closest;
@@ -180,7 +183,7 @@ public class PlayerControl : MonoBehaviour
             GrabPoint(ClosestPoint);
         }
 
-        if(!playerInput.isPressing && CurrentPoint != null)
+        if (!playerInput.isPressing && CurrentPoint != null)
         {
             LetGo();
         }
@@ -203,7 +206,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-   
+
 
     void GrabPoint(GameObject point)
     {
@@ -227,7 +230,7 @@ public class PlayerControl : MonoBehaviour
         {
             Destroy(grapple);
         }
-        
+
         CurrentPoint = null;
 
         audioData.volume = 0.06f;
@@ -235,21 +238,13 @@ public class PlayerControl : MonoBehaviour
         audioData.Play();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnGoal()
     {
-        if (other.transform.CompareTag("Goal"))
-        {
-            if (!gameManager.EndlessMode)
-            {
-                LetGo();
-                ClosestPoint = null;
-                Debug.Log("player reached the goal");
-                PausePlayer();
-                EventManager.TriggerEvent(Events.STOP_TIMER);
-                StartCoroutine(GoToGoal(other.transform.position));
-            }
-            EventManager.TriggerEvent(Events.GOAL);
-        }
+        LetGo();
+        ClosestPoint = null;
+        Debug.Log("player reached the goal");
+        PausePlayer();
+        StartCoroutine(GoToGoal(Vector2.zero));
     }
 
     IEnumerator GoToGoal(Vector2 goalPosition)

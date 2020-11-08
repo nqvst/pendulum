@@ -14,10 +14,14 @@ public class Waypoint : MonoBehaviour
     [SerializeField] float paddingMultiplyer;
     [SerializeField] float offsetAngle = 0;
 
+    private float targetAlpha = 1;
+
+    GameManager gameManager;
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("Goal").transform;
-        image = GetComponent<Image>();    
+        image = GetComponent<Image>();
+        gameManager = GameManager.instance;
     }
 
     void LateUpdate()
@@ -39,15 +43,17 @@ public class Waypoint : MonoBehaviour
         Vector2 viewPortPos = Camera.main.WorldToViewportPoint(target.position);
         bool isInView = viewPortPos.x > 0 && viewPortPos.x < 1 && viewPortPos.y > 0 && viewPortPos.y < 1;
 
+        color = gameManager.currentContrastColor;
         if (isInView)
         {
             color.a = 0;
-            image.color = color;
-        } else
+        }
+        else
         {
             color.a = maxAlpha;
-            image.color = color;
         }
+
+        image.color = Color.Lerp(image.color, color, Time.deltaTime * 2);
 
         transform.position = Vector2.Lerp(transform.position, arrowPos, Time.deltaTime * 2);
 

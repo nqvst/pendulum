@@ -9,6 +9,8 @@ public class Events
     // trigger when the player reaches the goal on the map
     public static String GOAL = "GOAL";
 
+    public static String PLAY_GOAL_SOUND = "PLAY_GOAL_SOUND";
+
     // trigger when the player presses space or touches the screen
     public static String PRESS = "PRESS";
     public static String UNPRESS = "UNPRESS";
